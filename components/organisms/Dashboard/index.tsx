@@ -1,3 +1,4 @@
+import { useNavbarContext } from "@/components/Navbar";
 import CardAnimate from "../../molecules/cardAnimate";
 import CardDefault from "../../molecules/cardDefault";
 import SessionsbyCountries from "./SessionsbyCountries";
@@ -7,6 +8,7 @@ import TotalTrafic from "./TotalTrafic";
 import UserByDevice from "./UserByDevice";
 
 import Topbar from "@/components/organisms/Topbar/page";
+import { useEffect } from "react";
 
 
 // export const metadata = {
@@ -20,10 +22,15 @@ export default function index() {
         parentTitle: "API Management",
         parentLink: `/`
     }];
-
+    let topBar = useNavbarContext()
+    console.log(topBar,'topbar')
+    useEffect(()=>{
+        topBar.pageTitle = "Dashboard"
+        topBar.parentList = parentList
+    },[topBar])
   return (
     <>
-        <Topbar pageTitle='Dashboard' parentList={parentList} />
+        {/* <Topbar pageTitle='Dashboard' parentList={parentList} /> */}
         <div className="row">
             <div className="col-xxl-12">
                 <div className="d-flex flex-column h-100">

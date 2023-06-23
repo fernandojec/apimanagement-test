@@ -7,16 +7,43 @@ import LogoNav from "@/app/Logo"
 import { useCallback , useState, useEffect} from 'react';
 import { useSession} from "next-auth/react"
 import useAxiosAuth from "@/lib/hooks/useAxiosAuth";
+import Topbar from "@/components/organisms/Topbar/page";
+import { createContext, useContext } from 'react';
 
+const NavbarContext = createContext<NavbarProps>({
+    pageTitle:"",
+    parentList:[]
+});
 
-export default function Index(){
-    // eslint-disable-next-line react-hooks/rules-of-hooks
+export function useNavbarContext(){
+    return useContext(NavbarContext);
+}
+
+// export function NavbarC() {
+//     const [pageTitle, setpageTitle] = useState()
+//     const [parentList, setparentList] = useState()
+   
+//     return (
+//       <NavbarContext.Provider value={{ pageTitle }}>
+//         <Navbar />
+//       </NavbarContext.Provider>
+//     )
+//   }
+
+interface NavbarProps{
+    pageTitle:string;
+    parentList:any;
+}
+
+function NavBarChild(){
+    let { pageTitle,parentList } = useContext<NavbarProps>(NavbarContext)
+    
     const axiosAuth = useAxiosAuth();
     const {data: session, status} = useSession();
     // eslint-disable-next-line react-hooks/rules-of-hooks
     const [title, setTitle] = useState();
     const [menuList, setMenuList] = useState([]);
-
+    // const [topbarValue, setTopbarValue] = useState()
 
     const getMenu = useCallback(async () => {
             const response = await axiosAuth.get("/menus")
@@ -61,6 +88,7 @@ export default function Index(){
 
     return (
         <>
+        <Topbar pageTitle={pageTitle} parentList={parentList} />
         {/* ========== App Menu ========== */}
         <div className="app-menu navbar-menu">
             {/* LOGO */}
@@ -92,6 +120,70 @@ export default function Index(){
             <div className="sidebar-background"></div>
         </div>
         {/* Left Sidebar End */}
+        </>
+    )
+    
+}
+
+export default function Index(){
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    // const {pageTitle = '', parentList=[]} = props;
+    // const axiosAuth = useAxiosAuth();
+    // const {data: session, status} = useSession();
+    // // eslint-disable-next-line react-hooks/rules-of-hooks
+    // const [title, setTitle] = useState();
+    // const [menuList, setMenuList] = useState([]);
+    // const [topbarValue, setTopbarValue] = useState()
+
+    // const getMenu = useCallback(async () => {
+    //         const response = await axiosAuth.get("/menus")
+
+    //         const data = response.data.data;
+    //         const dataMenu = data.sort(function(
+    //             a: { id: number; parent_id: number; sequence: number; }
+    //             , b: { id: number; parent_id: number; sequence: number; }) {
+    //             return a.parent_id - b.parent_id || a.sequence - b.sequence || a.id - b.id;
+    //           });
+
+    //           console.log("************************---------",dataMenu)
+    //           setMenuList(dataMenu);
+
+    // }, [axiosAuth,status]);
+
+
+    // useEffect(() =>{
+    //    getMenu()
+
+    //   if (typeof document !== undefined){
+    //     // require('bootstrap/dist/js/bootstrap');
+        
+    //     require('bootstrap/dist/js/bootstrap.bundle.min');
+    //     require('feather-icons/dist/feather');
+    //     require('select2/dist/js/select2.min');
+  
+    //     document.documentElement.setAttribute("lang", "en");
+    //     document.documentElement.setAttribute("data-layout", "vertical");
+    //     document.documentElement.setAttribute("data-topbar", "dark");
+    //     document.documentElement.setAttribute("data-sidebar", "gradient-4");
+    //     document.documentElement.setAttribute("data-sidebar-size", "lg");
+    //     document.documentElement.setAttribute("data-sidebar-image", "img-3");
+    //     document.documentElement.setAttribute("data-preloader", "enable");
+    //     document.documentElement.setAttribute("data-layout-mode", "light");
+    //     document.documentElement.setAttribute("data-layout-width", "fluid");
+    //     document.documentElement.setAttribute("data-layout-position", "fixed");
+    //     document.documentElement.setAttribute("data-layout-style", "default"); 
+  
+    //   }
+    // }, [getMenu])
+    const [topbarValue, setTopbarValue] = useState<NavbarProps>({
+        pageTitle:"",
+        parentList:[]
+    })
+    return (
+        <>
+        <NavbarContext.Provider value={topbarValue}>
+            <NavBarChild></NavBarChild>
+        </NavbarContext.Provider>
         </>
     )
 }

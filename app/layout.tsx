@@ -1,5 +1,5 @@
 //import "styles/globals.css";
-import { ReactNode } from "react";
+import { ReactNode, useRef, useState } from "react";
 import Provider from "./Provider";
 
 import '@/styles/libs/jsvectormap/css/jsvectormap.min.css';
@@ -18,7 +18,9 @@ interface IProps {
 export default async function RootLayout({ children }: IProps) {
   const session = await getServerSession(authOptions)
   console.log(session,'from layout')
+  let parentList:any[] = [];
   let navbar = session != null && session != undefined ? (
+    // <Navbar pageTitle="Dashboard" parentList={parentList}></Navbar>
     <Navbar></Navbar>
   ):(<div></div>)
   

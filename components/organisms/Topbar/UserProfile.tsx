@@ -20,7 +20,7 @@ export default function UserProfile() {
 
 
     const getUserLogin = useCallback(async () => {
-        const authLogin : UserLoginTypes = jwtDecode(session?.user.accessToken);
+        const authLogin : UserLoginTypes = jwtDecode(session?.user.accessToken ?? "");
         const response = await axiosAuth.get("/users/"+authLogin.id)
 
         if(response.status == 200){
